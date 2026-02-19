@@ -24,7 +24,7 @@ This guide walks through:
 # 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/CoWERA.git
+git clone [https://github.com/Shaheerah3007/CoWERA.git]
 cd CoWERA
 ```
 
