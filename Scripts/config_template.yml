@@ -1,0 +1,184 @@
+# ===============================================================
+# 🧬 CoWERA Simulation Input File
+# ===============================================================
+# This YAML file defines ALL parameters required to launch a
+# CoWERA simulation.
+#
+# Launch command:
+#     python run_cowera.py --config input.yaml
+#
+# ===============================================================
+
+
+
+# =================================================================
+# 🚀 CUDA GPU PERFORMANCE SETTINGS  (IMPORTANT)
+# =================================================================
+# ⚡ This simulation is intended to run on a GPU-enabled system.
+#
+# For optimal multi-walker performance, CUDA MPS (Multi-Process
+# Service) is strongly recommended.
+#
+# ---------------------------------------------------------------
+# 🟢 To enable CUDA MPS (run in terminal BEFORE launching):
+#
+#     nvidia-cuda-mps-control -d
+#     export CUDA_MPS_ACTIVE_THREAD_PERCENTAGE=20
+#
+# Adjust the percentage based on GPU capacity.
+# Example:
+#   20% → for 5 parallel processes
+#   10% → for 10 parallel processes
+#
+# Without MPS, performance may degrade significantly when running
+# multiple walkers on a single GPU.
+# =================================================================
+
+
+
+# ===============================================================
+# 🧬 SYSTEM INFORMATION
+# ===============================================================
+# Name of the molecular system.
+system: "Trp-cage"
+
+# Path to system directory.
+# Must contain:
+#   - system.py  (system creation logic)
+#   - structure files (.gro, .top, .itp, etc.)
+dir: "./Systems/TC10b Trp-cage"
+
+
+
+# ===============================================================
+# 🧪 SIMULATION SETUP
+# ===============================================================
+
+# Number of parallel trajectories (walkers)
+num_walkers: 16
+
+# Maximum allowed walker probability (prevents dominance)
+pmax: 0.20
+
+# Run label (used in output directory naming)
+run: "test_0"
+
+# MD steps between each resampling event
+n_steps: 50000
+
+# Total number of resampling cycles
+n_cycles: 10000
+
+
+
+# ===============================================================
+# 📂 INPUT / OUTPUT FILES
+# ===============================================================
+
+# Starting coordinate file (.gro)
+start: "folded.gro"
+
+# Topology file (.top)
+topol: "topol.top"
+
+# Target structure (used for RMSD or direction reference)
+# May be None if using best_hummer_q and direction implied.
+target: "unfolded.gro"
+
+# Native structure (used for contact-based metrics)
+# May be None if sel_feat = "rmsd_backbone"
+native: "folded.gro"
+
+
+
+# ===============================================================
+# 📊 FEATURE SELECTION
+# ===============================================================
+
+# Progress coordinate to monitor
+# Options:
+#   - "best_hummer_q"  (native contact fraction)
+#   - "rmsd_backbone"  (Cα RMSD)
+sel_feat: "best_hummer_q"
+
+# Resampling decision strategy:
+#   - "greedy"         → accept only improving moves
+#   - "probabilistic"  → stochastic acceptance
+mode: "probabilistic"
+
+# Distance metric used between walkers:
+#   - "pairwise_rmsd"
+#   - "euclidean"      (distance in CV space)
+distance_criterion: "euclidean"
+
+
+
+# ===============================================================
+# 📏 DISTANCE THRESHOLDS
+# ===============================================================
+
+# Merge cutoff distance
+# Walkers closer than this may merge
+d_merge: 0.3
+
+# Warping cutoff distance
+# Defines boundary condition
+d_warped: 0.3
+
+
+
+# ===============================================================
+# 🌡 THERMODYNAMIC SETTINGS
+# ===============================================================
+
+# Simulation temperature (Kelvin)
+temp: 290.0
+
+
+
+# ===============================================================
+# 🎮 GPU CONFIGURATION
+# ===============================================================
+
+# List of GPU device IDs for CUDA execution
+# Repeat IDs if using CUDA MPS
+#
+# Example:
+#   [0,0,0,0,0] → 5 walkers sharing GPU 0 via MPS
+#
+gpu_ids: [0, 0, 0, 0, 0]
+
+
+
+# ===============================================================
+# 💾 DATA COLLECTION SETTINGS
+# ===============================================================
+
+# Frequency (MD steps) to save trajectory data
+save_freq: 5000
+
+# Number of bins for progress coordinate discretization
+n_bins: 122
+
+# Maximum allowed bins (dynamic adjustment cap)
+max_bins: 122
+
+
+
+# ===============================================================
+# 🔁 FOLDING / UNFOLDING MODE
+# ===============================================================
+
+# Direction indicator:
+#   +1 → increasing coordinate (folding for Q)
+#   -1 → decreasing coordinate (folding for RMSD)
+increment: -1
+
+
+
+# ===============================================================
+# 📁 OUTPUT CONFIGURATION
+# ===============================================================
+
+# Subdirectory inside system DIR to store results
+output_folder: "unfolding_runs"
