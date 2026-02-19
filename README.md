@@ -270,7 +270,7 @@ These are saved in **DCD format** and can be analysed using:
 
 ---
 
-# 🔬 10️⃣ Analysis
+# 🔬 1️⃣0️⃣ Analysis
 
 All analysis notebooks are provided in:
 
