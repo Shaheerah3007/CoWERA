@@ -167,7 +167,7 @@ d_merge: 0.6
 d_warped: 0.3
 
 temp: 290.0
-gpu_ids: [0, 0, 0, 0, 0]
+gpu_ids: [0] # if CUDA MPS enabled add 0 based on percentage
 
 save_freq: 5000
 n_bins: 122
